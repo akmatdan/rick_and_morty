@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_rick_and_morty/bloc/character_bloc.dart';
 import 'package:the_rick_and_morty/data/models/character.dart';
+import 'package:the_rick_and_morty/view/home/widgets/custom_list_tile.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -84,7 +85,7 @@ class _SearchPageState extends State<SearchPage> {
               _currentCharacter = characterLoaded;
               _currentResults = _currentCharacter.results;
               return _currentResults.isNotEmpty
-                  ? Text('$_currentResults')
+                  ? _customListView(_currentResults)
                   : const SizedBox();
             },
 
@@ -102,13 +103,11 @@ class _SearchPageState extends State<SearchPage> {
       separatorBuilder: (_, index) => const SizedBox(height: 5),
       shrinkWrap: true, // takes neccesary space depend on element
       itemBuilder: (context, index) {
-        final result = currentResults[index];
-        return ListTile(
-          title: Text(
-            result.name,
-            style: const TextStyle(color: Colors.white),
-          ),
-        );
+        final results = currentResults[index];
+        return Padding(
+            padding:
+                const EdgeInsets.only(top: 3, bottom: 3, right: 15, left: 15),
+            child: CustomListTile(results: results));
       },
     );
   }
