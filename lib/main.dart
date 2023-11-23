@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:the_rick_and_morty/bloc_observable.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'app.dart';
 
-void main() {
-  Bloc.observer = CharacterBlocObservable();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final storage = await HydratedStorage.build(
+    storageDirectory: await getTemporaryDirectory(),
+  );
+
+  HydratedBloc.storage = storage;
+
   runApp(const App());
 }

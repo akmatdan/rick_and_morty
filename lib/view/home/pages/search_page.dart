@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:the_rick_and_morty/bloc/character_bloc.dart';
@@ -22,14 +24,19 @@ class _SearchPageState extends State<SearchPage> {
   final RefreshController refreshController = RefreshController();
   bool _isPagination = false;
 
+  // final _storage = HydratedBloc.storage;
+
   @override
   void initState() {
-    super.initState();
+    // if (_storage.runtimeType.toString().isEmpty) {
     if (_currentResults.isEmpty) {
       context
           .read<CharacterBloc>()
           .add(const CharacterEvent.fetch(name: '', page: 1));
     }
+    // }
+
+    super.initState();
   }
 
   @override

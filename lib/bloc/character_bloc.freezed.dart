@@ -249,6 +249,21 @@ abstract class CharacterEventFetch implements CharacterEvent {
       throw _privateConstructorUsedError;
 }
 
+CharacterState _$CharacterStateFromJson(Map<String, dynamic> json) {
+  switch (json['runtimeType']) {
+    case 'loading':
+      return CharacterStateLoading.fromJson(json);
+    case 'loaded':
+      return CharacterStateLoaded.fromJson(json);
+    case 'error':
+      return CharacterStateError.fromJson(json);
+
+    default:
+      throw CheckedFromJsonException(json, 'runtimeType', 'CharacterState',
+          'Invalid union type "${json['runtimeType']}"!');
+  }
+}
+
 /// @nodoc
 mixin _$CharacterState {
   @optionalTypeArgs
@@ -295,6 +310,7 @@ mixin _$CharacterState {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -333,11 +349,18 @@ class __$$CharacterStateLoadingImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$CharacterStateLoadingImpl
     with DiagnosticableTreeMixin
     implements CharacterStateLoading {
-  const _$CharacterStateLoadingImpl();
+  const _$CharacterStateLoadingImpl({final String? $type})
+      : $type = $type ?? 'loading';
+
+  factory _$CharacterStateLoadingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CharacterStateLoadingImplFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -357,6 +380,7 @@ class _$CharacterStateLoadingImpl
             other is _$CharacterStateLoadingImpl);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -427,10 +451,20 @@ class _$CharacterStateLoadingImpl
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CharacterStateLoadingImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class CharacterStateLoading implements CharacterState {
   const factory CharacterStateLoading() = _$CharacterStateLoadingImpl;
+
+  factory CharacterStateLoading.fromJson(Map<String, dynamic> json) =
+      _$CharacterStateLoadingImpl.fromJson;
 }
 
 /// @nodoc
@@ -475,14 +509,22 @@ class __$$CharacterStateLoadedImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$CharacterStateLoadedImpl
     with DiagnosticableTreeMixin
     implements CharacterStateLoaded {
-  const _$CharacterStateLoadedImpl({required this.characterLoaded});
+  const _$CharacterStateLoadedImpl(
+      {required this.characterLoaded, final String? $type})
+      : $type = $type ?? 'loaded';
+
+  factory _$CharacterStateLoadedImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CharacterStateLoadedImplFromJson(json);
 
   @override
   final Character characterLoaded;
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -506,6 +548,7 @@ class _$CharacterStateLoadedImpl
                 other.characterLoaded == characterLoaded));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, characterLoaded);
 
@@ -584,11 +627,21 @@ class _$CharacterStateLoadedImpl
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CharacterStateLoadedImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class CharacterStateLoaded implements CharacterState {
   const factory CharacterStateLoaded(
       {required final Character characterLoaded}) = _$CharacterStateLoadedImpl;
+
+  factory CharacterStateLoaded.fromJson(Map<String, dynamic> json) =
+      _$CharacterStateLoadedImpl.fromJson;
 
   Character get characterLoaded;
   @JsonKey(ignore: true)
@@ -613,11 +666,18 @@ class __$$CharacterStateErrorImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$CharacterStateErrorImpl
     with DiagnosticableTreeMixin
     implements CharacterStateError {
-  const _$CharacterStateErrorImpl();
+  const _$CharacterStateErrorImpl({final String? $type})
+      : $type = $type ?? 'error';
+
+  factory _$CharacterStateErrorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CharacterStateErrorImplFromJson(json);
+
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -637,6 +697,7 @@ class _$CharacterStateErrorImpl
             other is _$CharacterStateErrorImpl);
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -707,8 +768,18 @@ class _$CharacterStateErrorImpl
     }
     return orElse();
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CharacterStateErrorImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class CharacterStateError implements CharacterState {
   const factory CharacterStateError() = _$CharacterStateErrorImpl;
+
+  factory CharacterStateError.fromJson(Map<String, dynamic> json) =
+      _$CharacterStateErrorImpl.fromJson;
 }
