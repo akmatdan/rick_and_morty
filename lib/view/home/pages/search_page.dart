@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'package:the_rick_and_morty/bloc/character_bloc.dart';
 import 'package:the_rick_and_morty/data/models/character.dart';
+import 'package:the_rick_and_morty/view/home/widgets/character_status.dart';
 import 'package:the_rick_and_morty/view/home/widgets/custom_list_tile.dart';
 
 class SearchPage extends StatefulWidget {
@@ -12,20 +16,22 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  // Supporting vars
   late Character _currentCharacter;
   List<Results> _currentResults = [];
   int _currentPage = 1;
   String _currentSearchStr = '';
 
+  final RefreshController refreshController = RefreshController();
+  bool _isPagination = false;
+
   @override
   void initState() {
+    super.initState();
     if (_currentResults.isEmpty) {
       context
           .read<CharacterBloc>()
           .add(const CharacterEvent.fetch(name: '', page: 1));
     }
-    super.initState();
   }
 
   @override
@@ -70,20 +76,34 @@ class _SearchPageState extends State<SearchPage> {
           child: state.when(
             // Loading state
             loading: () {
-              return const Center(
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  CircularProgressIndicator(strokeWidth: 2),
-                  SizedBox(width: 10),
-                  Text('Loading...'),
-                ]),
-              );
+              if (!_isPagination) {
+                return const Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(strokeWidth: 2),
+                      SizedBox(width: 10),
+                      Text('Loading...'),
+                    ],
+                  ),
+                );
+              } else {
+                return _customListView(_currentResults);
+              }
             },
 
             // Loaded state
             loaded: (characterLoaded) {
               _currentCharacter = characterLoaded;
-              _currentResults = _currentCharacter.results;
+              if (_isPagination) {
+                _currentResults = List.from(_currentResults)
+                  ..addAll(_currentCharacter.results);
+                refreshController.loadComplete();
+                _isPagination = false;
+              } else {
+                _currentResults = List.from(_currentCharacter.results);
+              }
+
               return _currentResults.isNotEmpty
                   ? _customListView(_currentResults)
                   : const SizedBox();
@@ -98,17 +118,43 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _customListView(List<Results> currentResults) {
-    return ListView.separated(
-      itemCount: currentResults.length,
-      separatorBuilder: (_, index) => const SizedBox(height: 5),
-      shrinkWrap: true, // takes neccesary space depend on element
-      itemBuilder: (context, index) {
-        final results = currentResults[index];
-        return Padding(
-            padding:
-                const EdgeInsets.only(top: 3, bottom: 3, right: 15, left: 15),
-            child: CustomListTile(results: results));
+    return SmartRefresher(
+      controller: refreshController,
+      enablePullUp: true,
+      enablePullDown: false,
+      onLoading: () {
+        _isPagination = true;
+        _currentPage++;
+        if (_currentPage <= _currentCharacter.info.pages) {
+          context.read<CharacterBloc>().add(
+                CharacterEvent.fetch(
+                  name: _currentSearchStr,
+                  page: _currentPage,
+                ),
+              );
+        } else {
+          refreshController.loadNoData();
+        }
       },
+      child: ListView.separated(
+        itemCount: currentResults.length,
+        separatorBuilder: (_, index) => const SizedBox(height: 5),
+        shrinkWrap: true, // takes neccesary space depend on element
+        itemBuilder: (context, index) {
+          final results = currentResults[index];
+
+          // Character Card
+          return Padding(
+            padding: const EdgeInsets.only(
+              top: 3,
+              bottom: 3,
+              right: 15,
+              left: 15,
+            ),
+            child: CustomListTile(results: results),
+          );
+        },
+      ),
     );
   }
 }

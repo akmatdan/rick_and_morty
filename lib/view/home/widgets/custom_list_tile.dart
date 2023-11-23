@@ -17,6 +17,7 @@ class CustomListTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // Image of character
             CachedNetworkImage(
               imageUrl: results.image,
               placeholder: (context, url) => const Padding(
@@ -27,7 +28,39 @@ class CustomListTile extends StatelessWidget {
               ),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
-            CardInfo(results: results)
+
+            // Name of character
+            Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 5),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Character name
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.9,
+                    child: Text(
+                      results.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Character status
+                  CharacterStatus(
+                      liveState: results.status == 'Alive'
+                          ? LiveState.alive
+                          : results.status == 'Dead'
+                              ? LiveState.dead
+                              : LiveState.unknown),
+                  const SizedBox(height: 20),
+
+                  // Character species and gender
+                  SpeciesAndGender(results: results),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -35,8 +68,8 @@ class CustomListTile extends StatelessWidget {
   }
 }
 
-class CardInfo extends StatelessWidget {
-  const CardInfo({
+class SpeciesAndGender extends StatelessWidget {
+  const SpeciesAndGender({
     super.key,
     required this.results,
   });
@@ -45,75 +78,45 @@ class CardInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Name of character
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.9,
-            child: Text(
-              results.name,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 2,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Species:',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  results.species,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+              ],
             ),
-          ),
-          const SizedBox(height: 10),
-
-          // Character status
-          CharacterStatus(
-              liveState: results.status == 'Alive'
-                  ? LiveState.alive
-                  : results.status == 'Dead'
-                      ? LiveState.dead
-                      : LiveState.unknown),
-          const SizedBox(height: 20),
-
-          // Row for species and gender
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 2,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Species:',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        results.species,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gender:',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        results.gender,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    ],
-                  )
-                ]),
-          )
-        ],
-      ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Gender:',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  results.gender,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+              ],
+            )
+          ]),
     );
   }
 }

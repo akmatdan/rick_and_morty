@@ -16,11 +16,13 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     on<CharacterEventFetch>((event, emit) async {
       emit(const CharacterState.loading());
       try {
-        Character characterLoaded =
-            await characterRepo.getCharacter(event.page, event.name);
+        Character characterLoaded = await characterRepo
+            .getCharacter(event.page, event.name)
+            .timeout(const Duration(seconds: 5));
         emit(CharacterState.loaded(characterLoaded: characterLoaded));
       } catch (_) {
         emit(const CharacterState.error());
+        rethrow;
       }
     });
   }
