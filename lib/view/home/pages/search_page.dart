@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:the_rick_and_morty/bloc/character_bloc.dart';
@@ -24,17 +22,13 @@ class _SearchPageState extends State<SearchPage> {
   final RefreshController refreshController = RefreshController();
   bool _isPagination = false;
 
-  // final _storage = HydratedBloc.storage;
-
   @override
   void initState() {
-    // if (_storage.runtimeType.toString().isEmpty) {
     if (_currentResults.isEmpty) {
       context
           .read<CharacterBloc>()
           .add(const CharacterEvent.fetch(name: '', page: 1));
     }
-    // }
 
     super.initState();
   }
@@ -43,82 +37,84 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final state = context.watch<CharacterBloc>().state;
 
-    return Column(
-      children: [
-        Padding(
-          padding:
-              const EdgeInsets.only(top: 15, bottom: 15, right: 16, left: 16),
-          child: TextField(
-            style: const TextStyle(color: Colors.white),
-            cursorColor: Colors.white,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(86, 86, 86, 0.8),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: BorderSide.none,
+    return Scaffold(
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 15, bottom: 15, right: 16, left: 16),
+            child: TextField(
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.white,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color.fromRGBO(86, 86, 86, 0.8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
+                ),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                hintText: 'Search name',
+                hintStyle: const TextStyle(color: Colors.grey),
               ),
-              prefixIcon: const Icon(Icons.search, color: Colors.white),
-              hintText: 'Search name',
-              hintStyle: const TextStyle(color: Colors.grey),
+
+              // Method for TextField
+              onChanged: (value) {
+                _currentPage = 1;
+                _currentResults = [];
+                _currentSearchStr = value;
+
+                context
+                    .read<CharacterBloc>()
+                    .add(CharacterEvent.fetch(name: value, page: _currentPage));
+              },
             ),
-
-            // Method for TextField
-            onChanged: (value) {
-              _currentPage = 1;
-              _currentResults = [];
-              _currentSearchStr = value;
-
-              context
-                  .read<CharacterBloc>()
-                  .add(CharacterEvent.fetch(name: value, page: _currentPage));
-            },
           ),
-        ),
 
-        // States
-        Expanded(
-          child: state.when(
-            // Loading state
-            loading: () {
-              if (!_isPagination) {
-                return const Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(strokeWidth: 2),
-                      SizedBox(width: 10),
-                      Text('Loading...'),
-                    ],
-                  ),
-                );
-              } else {
-                return _customListView(_currentResults);
-              }
-            },
+          // States
+          Expanded(
+            child: state.when(
+              // Loading state
+              loading: () {
+                if (!_isPagination) {
+                  return const Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(strokeWidth: 2),
+                        SizedBox(width: 10),
+                        Text('Loading...'),
+                      ],
+                    ),
+                  );
+                } else {
+                  return _customListView(_currentResults);
+                }
+              },
 
-            // Loaded state
-            loaded: (characterLoaded) {
-              _currentCharacter = characterLoaded;
-              if (_isPagination) {
-                _currentResults = List.from(_currentResults)
-                  ..addAll(_currentCharacter.results);
-                refreshController.loadComplete();
-                _isPagination = false;
-              } else {
-                _currentResults = List.from(_currentCharacter.results);
-              }
+              // Loaded state
+              loaded: (characterLoaded) {
+                _currentCharacter = characterLoaded;
+                if (_isPagination) {
+                  _currentResults = List.from(_currentResults)
+                    ..addAll(_currentCharacter.results);
+                  refreshController.loadComplete();
+                  _isPagination = false;
+                } else {
+                  _currentResults = List.from(_currentCharacter.results);
+                }
 
-              return _currentResults.isNotEmpty
-                  ? _customListView(_currentResults)
-                  : const SizedBox();
-            },
+                return _currentResults.isNotEmpty
+                    ? _customListView(_currentResults)
+                    : const SizedBox();
+              },
 
-            // Error state
-            error: () => const Text('Nothing found...'),
+              // Error state
+              error: () => const Text('Nothing found...'),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
