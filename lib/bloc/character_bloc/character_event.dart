@@ -6,5 +6,7 @@ class CharacterEvent with _$CharacterEvent {
     required String name,
     required int page,
     required String status,
+    required String species,
+    required String gender,
   }) = CharacterEventFetch;
 }

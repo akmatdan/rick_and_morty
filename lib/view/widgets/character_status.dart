@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 enum LiveState { alive, dead, unknown }
 
+enum SpeciesState { human, alien, humanoid, unknown }
+
+enum GenderState { male, female, unknown }
+
 class CharacterStatus extends StatelessWidget {
   final LiveState liveState;
   const CharacterStatus({super.key, required this.liveState});

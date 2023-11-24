@@ -5,12 +5,15 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:the_rick_and_morty/bloc/character_bloc/character_bloc.dart';
 import 'package:the_rick_and_morty/data/models/character.dart';
 import 'package:the_rick_and_morty/utils/constants/colors.dart';
+import 'package:the_rick_and_morty/utils/constants/sizes.dart';
 import 'package:the_rick_and_morty/view/pages/character/character_detail_page.dart';
 import 'package:the_rick_and_morty/view/widgets/character_list_tile.dart';
 import 'package:the_rick_and_morty/view/widgets/character_status.dart';
+import 'package:the_rick_and_morty/view/widgets/filter_options.dart';
+import 'package:the_rick_and_morty/view/widgets/string_extension.dart';
 
 class CharacterSearch extends StatefulWidget {
-  const CharacterSearch({super.key});
+  const CharacterSearch({Key? key}) : super(key: key);
 
   @override
   State<CharacterSearch> createState() => _CharacterSearchState();
@@ -26,14 +29,22 @@ class _CharacterSearchState extends State<CharacterSearch> {
   bool _isPagination = false;
 
   LiveState? _currentStatus;
-  late Set<LiveState> _selectedOptions = {};
+  SpeciesState? _currentSpecies;
+  GenderState? _currentGender;
+  late final Set<String> _selectedStatus = {};
+  late final Set<String> _selectedSpecies = {};
+  late final Set<String> _selectedGender = {};
 
   @override
   void initState() {
     if (_currentResults.isEmpty) {
-      context
-          .read<CharacterBloc>()
-          .add(const CharacterEvent.fetch(name: '', page: 1, status: ''));
+      context.read<CharacterBloc>().add(const CharacterEvent.fetch(
+            name: '',
+            page: 1,
+            status: '',
+            species: '',
+            gender: '',
+          ));
     }
 
     super.initState();
@@ -74,14 +85,38 @@ class _CharacterSearchState extends State<CharacterSearch> {
                       name: value,
                       page: _currentPage,
                       status: _currentStatus?.toString() ?? '',
+                      species: _currentSpecies?.toString() ?? '',
+                      gender: _currentGender?.toString() ?? '',
                     ));
               },
             ),
           ),
           const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () => _showFilterDialog(),
-            child: const Text('Filter'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => _showFilterDialog(
+                    'Status', LiveState.values, _selectedStatus),
+                child: const Text('Status'),
+              ),
+              const SizedBox(
+                width: TSizes.spaceBtwItems,
+              ),
+              ElevatedButton(
+                onPressed: () => _showFilterDialog(
+                    'Species', SpeciesState.values, _selectedSpecies),
+                child: const Text('Species'),
+              ),
+              const SizedBox(
+                width: TSizes.spaceBtwItems,
+              ),
+              ElevatedButton(
+                onPressed: () => _showFilterDialog(
+                    'Gender', GenderState.values, _selectedGender),
+                child: const Text('Gender'),
+              ),
+            ],
           ),
 
           // States
@@ -145,6 +180,8 @@ class _CharacterSearchState extends State<CharacterSearch> {
                   name: _currentSearchStr,
                   page: _currentPage,
                   status: _currentStatus?.toString() ?? '',
+                  species: _currentSpecies?.toString() ?? '',
+                  gender: _currentGender?.toString() ?? '',
                 ),
               );
         } else {
@@ -154,7 +191,7 @@ class _CharacterSearchState extends State<CharacterSearch> {
       child: ListView.separated(
         itemCount: currentResults.length,
         separatorBuilder: (_, index) => const SizedBox(height: 5),
-        shrinkWrap: true, // takes neccesary space depend on element
+        shrinkWrap: true, // takes necessary space depend on element
         itemBuilder: (context, index) {
           final results = currentResults[index];
 
@@ -183,24 +220,37 @@ class _CharacterSearchState extends State<CharacterSearch> {
     );
   }
 
-  void _showFilterDialog() {
+  void _showFilterDialog(
+      String title, List<dynamic> options, Set<String> selectedOptions) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Filter Options'),
+          title: Text('Filter by $title'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildFilterOption('Alive', LiveState.alive),
-              _buildFilterOption('Dead', LiveState.dead),
-              _buildFilterOption('Unknown', LiveState.unknown),
+              for (var option in options)
+                FilterOption(
+                    title: option.toString().split('.').last,
+                    option: option,
+                    selectedOptions: selectedOptions,
+                    onChanged: (bool value) {
+                      setState(
+                        () {
+                          if (selectedOptions.contains(title)) {
+                            selectedOptions.remove(title);
+                          } else {
+                            selectedOptions.add(title);
+                          }
+                        },
+                      );
+                    }),
             ],
           ),
           actions: [
             ElevatedButton(
               onPressed: () {
-                // Apply the filter options and fetch data
                 _applyFilters();
                 Navigator.pop(context);
               },
@@ -212,56 +262,34 @@ class _CharacterSearchState extends State<CharacterSearch> {
     );
   }
 
-  Widget _buildFilterOption(String title, LiveState status) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return ListTile(
-          title: Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          onTap: () {
-            setState(() {
-              if (_selectedOptions.contains(status)) {
-                _selectedOptions.remove(status);
-              } else {
-                _selectedOptions.add(status);
-              }
-            });
-          },
-          leading: Checkbox(
-            value: _selectedOptions.contains(status),
-            onChanged: (bool? value) {
-              setState(() {
-                if (_selectedOptions.contains(status)) {
-                  _selectedOptions.remove(status);
-                } else {
-                  _selectedOptions.add(status);
-                }
-              });
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  // Call this method to apply filters based on _selectedOptions
   void _applyFilters() {
     setState(() {
       _currentPage = 1;
       _currentResults = [];
-      _currentStatus =
-          _selectedOptions.isNotEmpty ? _selectedOptions.first : null;
+      _currentStatus = _selectedStatus.isNotEmpty
+          ? _selectedStatus.first.toLiveState()
+          : null;
+      _currentSpecies = _selectedSpecies.isNotEmpty
+          ? _selectedSpecies.first.toSpeciesState()
+          : null;
+      _currentGender = _selectedGender.isNotEmpty
+          ? _selectedGender.first.toGenderState()
+          : null;
 
       // Map LiveState to corresponding status string
       String statusString = _currentStatus?.toString().split('.').last ?? '';
+      String speciesString = _currentSpecies?.toString().split('.').last ?? '';
+      String genderString = _currentGender?.toString().split('.').last ?? '';
 
-      context.read<CharacterBloc>().add(CharacterEvent.fetch(
-            name: _currentSearchStr,
-            page: _currentPage,
-            status: statusString,
-          ));
+      context.read<CharacterBloc>().add(
+            CharacterEvent.fetch(
+              name: _currentSearchStr,
+              page: _currentPage,
+              status: statusString,
+              species: speciesString,
+              gender: genderString,
+            ),
+          );
     });
   }
 }

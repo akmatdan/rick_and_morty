@@ -19,19 +19,27 @@ mixin _$CharacterEvent {
   String get name => throw _privateConstructorUsedError;
   int get page => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
+  String get species => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, int page, String status) fetch,
+    required TResult Function(
+            String name, int page, String status, String species, String gender)
+        fetch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name, int page, String status)? fetch,
+    TResult? Function(String name, int page, String status, String species,
+            String gender)?
+        fetch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, int page, String status)? fetch,
+    TResult Function(String name, int page, String status, String species,
+            String gender)?
+        fetch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -63,7 +71,8 @@ abstract class $CharacterEventCopyWith<$Res> {
           CharacterEvent value, $Res Function(CharacterEvent) then) =
       _$CharacterEventCopyWithImpl<$Res, CharacterEvent>;
   @useResult
-  $Res call({String name, int page, String status});
+  $Res call(
+      {String name, int page, String status, String species, String gender});
 }
 
 /// @nodoc
@@ -82,6 +91,8 @@ class _$CharacterEventCopyWithImpl<$Res, $Val extends CharacterEvent>
     Object? name = null,
     Object? page = null,
     Object? status = null,
+    Object? species = null,
+    Object? gender = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -96,6 +107,14 @@ class _$CharacterEventCopyWithImpl<$Res, $Val extends CharacterEvent>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      species: null == species
+          ? _value.species
+          : species // ignore: cast_nullable_to_non_nullable
+              as String,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -108,7 +127,8 @@ abstract class _$$CharacterEventFetchImplCopyWith<$Res>
       __$$CharacterEventFetchImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int page, String status});
+  $Res call(
+      {String name, int page, String status, String species, String gender});
 }
 
 /// @nodoc
@@ -125,6 +145,8 @@ class __$$CharacterEventFetchImplCopyWithImpl<$Res>
     Object? name = null,
     Object? page = null,
     Object? status = null,
+    Object? species = null,
+    Object? gender = null,
   }) {
     return _then(_$CharacterEventFetchImpl(
       name: null == name
@@ -139,6 +161,14 @@ class __$$CharacterEventFetchImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      species: null == species
+          ? _value.species
+          : species // ignore: cast_nullable_to_non_nullable
+              as String,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -149,7 +179,11 @@ class _$CharacterEventFetchImpl
     with DiagnosticableTreeMixin
     implements CharacterEventFetch {
   const _$CharacterEventFetchImpl(
-      {required this.name, required this.page, required this.status});
+      {required this.name,
+      required this.page,
+      required this.status,
+      required this.species,
+      required this.gender});
 
   @override
   final String name;
@@ -157,10 +191,14 @@ class _$CharacterEventFetchImpl
   final int page;
   @override
   final String status;
+  @override
+  final String species;
+  @override
+  final String gender;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CharacterEvent.fetch(name: $name, page: $page, status: $status)';
+    return 'CharacterEvent.fetch(name: $name, page: $page, status: $status, species: $species, gender: $gender)';
   }
 
   @override
@@ -170,7 +208,9 @@ class _$CharacterEventFetchImpl
       ..add(DiagnosticsProperty('type', 'CharacterEvent.fetch'))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('page', page))
-      ..add(DiagnosticsProperty('status', status));
+      ..add(DiagnosticsProperty('status', status))
+      ..add(DiagnosticsProperty('species', species))
+      ..add(DiagnosticsProperty('gender', gender));
   }
 
   @override
@@ -180,11 +220,14 @@ class _$CharacterEventFetchImpl
             other is _$CharacterEventFetchImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.page, page) || other.page == page) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.species, species) || other.species == species) &&
+            (identical(other.gender, gender) || other.gender == gender));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, page, status);
+  int get hashCode =>
+      Object.hash(runtimeType, name, page, status, species, gender);
 
   @JsonKey(ignore: true)
   @override
@@ -196,27 +239,33 @@ class _$CharacterEventFetchImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, int page, String status) fetch,
+    required TResult Function(
+            String name, int page, String status, String species, String gender)
+        fetch,
   }) {
-    return fetch(name, page, status);
+    return fetch(name, page, status, species, gender);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name, int page, String status)? fetch,
+    TResult? Function(String name, int page, String status, String species,
+            String gender)?
+        fetch,
   }) {
-    return fetch?.call(name, page, status);
+    return fetch?.call(name, page, status, species, gender);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, int page, String status)? fetch,
+    TResult Function(String name, int page, String status, String species,
+            String gender)?
+        fetch,
     required TResult orElse(),
   }) {
     if (fetch != null) {
-      return fetch(name, page, status);
+      return fetch(name, page, status, species, gender);
     }
     return orElse();
   }
@@ -254,7 +303,9 @@ abstract class CharacterEventFetch implements CharacterEvent {
   const factory CharacterEventFetch(
       {required final String name,
       required final int page,
-      required final String status}) = _$CharacterEventFetchImpl;
+      required final String status,
+      required final String species,
+      required final String gender}) = _$CharacterEventFetchImpl;
 
   @override
   String get name;
@@ -262,6 +313,10 @@ abstract class CharacterEventFetch implements CharacterEvent {
   int get page;
   @override
   String get status;
+  @override
+  String get species;
+  @override
+  String get gender;
   @override
   @JsonKey(ignore: true)
   _$$CharacterEventFetchImplCopyWith<_$CharacterEventFetchImpl> get copyWith =>
