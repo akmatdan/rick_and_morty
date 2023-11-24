@@ -27,7 +27,7 @@ class App extends StatelessWidget {
               fontSize: 11.0, fontWeight: FontWeight.w100, color: Colors.grey),
         ),
       ),
-      home: HomePage(title: 'The Rick and Morty'),
+      home: HomePage(),
     );
   }
 }
