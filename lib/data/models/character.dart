@@ -34,7 +34,34 @@ class Results with _$Results {
     required String species,
     required String gender,
     required String image,
+    required List<String> episode,
+    required String url,
+    required Origin origin,
+    required Location location,
+    required String created,
   }) = _Results;
+
   factory Results.fromJson(Map<String, dynamic> json) =>
       _$ResultsFromJson(json);
+}
+
+@Freezed(makeCollectionsUnmodifiable: false)
+class Origin with _$Origin {
+  const factory Origin({
+    required String name,
+    required String url,
+  }) = _Origin;
+
+  factory Origin.fromJson(Map<String, dynamic> json) => _$OriginFromJson(json);
+}
+
+@Freezed(makeCollectionsUnmodifiable: false)
+class Location with _$Location {
+  const factory Location({
+    required String name,
+    required String url,
+  }) = _Location;
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
 }

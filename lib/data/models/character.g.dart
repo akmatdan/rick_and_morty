@@ -43,6 +43,12 @@ _$ResultsImpl _$$ResultsImplFromJson(Map<String, dynamic> json) =>
       species: json['species'] as String,
       gender: json['gender'] as String,
       image: json['image'] as String,
+      episode:
+          (json['episode'] as List<dynamic>).map((e) => e as String).toList(),
+      url: json['url'] as String,
+      origin: Origin.fromJson(json['origin'] as Map<String, dynamic>),
+      location: Location.fromJson(json['location'] as Map<String, dynamic>),
+      created: json['created'] as String,
     );
 
 Map<String, dynamic> _$$ResultsImplToJson(_$ResultsImpl instance) =>
@@ -53,4 +59,32 @@ Map<String, dynamic> _$$ResultsImplToJson(_$ResultsImpl instance) =>
       'species': instance.species,
       'gender': instance.gender,
       'image': instance.image,
+      'episode': instance.episode,
+      'url': instance.url,
+      'origin': instance.origin,
+      'location': instance.location,
+      'created': instance.created,
+    };
+
+_$OriginImpl _$$OriginImplFromJson(Map<String, dynamic> json) => _$OriginImpl(
+      name: json['name'] as String,
+      url: json['url'] as String,
+    );
+
+Map<String, dynamic> _$$OriginImplToJson(_$OriginImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
+    };
+
+_$LocationImpl _$$LocationImplFromJson(Map<String, dynamic> json) =>
+    _$LocationImpl(
+      name: json['name'] as String,
+      url: json['url'] as String,
+    );
+
+Map<String, dynamic> _$$LocationImplToJson(_$LocationImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
     };

@@ -95,28 +95,30 @@ class _CharacterSearchState extends State<CharacterSearch> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () => _showFilterDialog(
+              buildFilterButton(
+                'Status',
+                () => _showFilterDialog(
                     'Status', LiveState.values, _selectedStatus),
-                child: const Text('Status'),
+                _selectedStatus,
               ),
-              const SizedBox(
-                width: TSizes.spaceBtwItems,
-              ),
-              ElevatedButton(
-                onPressed: () => _showFilterDialog(
+              const SizedBox(width: TSizes.spaceBtwItems),
+              buildFilterButton(
+                'Species',
+                () => _showFilterDialog(
                     'Species', SpeciesState.values, _selectedSpecies),
-                child: const Text('Species'),
+                _selectedSpecies,
               ),
-              const SizedBox(
-                width: TSizes.spaceBtwItems,
-              ),
-              ElevatedButton(
-                onPressed: () => _showFilterDialog(
+              const SizedBox(width: TSizes.spaceBtwItems),
+              buildFilterButton(
+                'Gender',
+                () => _showFilterDialog(
                     'Gender', GenderState.values, _selectedGender),
-                child: const Text('Gender'),
+                _selectedGender,
               ),
             ],
+          ),
+          const SizedBox(
+            height: TSizes.spaceBtwInputFields,
           ),
 
           // States
@@ -254,7 +256,14 @@ class _CharacterSearchState extends State<CharacterSearch> {
                 _applyFilters();
                 Navigator.pop(context);
               },
-              child: const Text('Apply'),
+              child: const Text(
+                'Apply',
+                style: TextStyle(
+                  color: TColors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         );
@@ -291,5 +300,30 @@ class _CharacterSearchState extends State<CharacterSearch> {
             ),
           );
     });
+  }
+
+  Widget buildFilterButton(
+    String label,
+    void Function()? onPressed,
+    Set<String> selectedOptions,
+  ) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: TColors.primary,
+        foregroundColor: TColors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 }
