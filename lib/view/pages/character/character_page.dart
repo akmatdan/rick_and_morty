@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:the_rick_and_morty/bloc/episode_bloc/episode_bloc.dart';
-import 'package:the_rick_and_morty/data/repositories/episode_repo.dart';
+import 'package:the_rick_and_morty/bloc/character_bloc/character_bloc.dart';
+import 'package:the_rick_and_morty/data/repositories/character_repo.dart';
 import 'package:the_rick_and_morty/utils/constants/colors.dart';
-import 'package:the_rick_and_morty/view/pages/episode/episode_search.dart';
+import 'package:the_rick_and_morty/view/pages/character/character_search.dart';
 
-class EpisodePage extends StatelessWidget {
-  const EpisodePage({Key? key}) : super(key: key);
+class CharacterPage extends StatelessWidget {
+  const CharacterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class EpisodePage extends StatelessWidget {
         ),
       ),
       body: BlocProvider(
-        create: (context) => EpisodeBloc(episodeRepo: EpisodeRepo()),
-        child: const EpisodeSearch(),
+        create: (context) => CharacterBloc(characterRepo: CharacterRepo()),
+        child: const CharacterSearch(),
       ),
     );
   }

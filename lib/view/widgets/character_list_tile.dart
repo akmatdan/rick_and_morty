@@ -2,11 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:the_rick_and_morty/data/models/character.dart';
+import 'package:the_rick_and_morty/utils/constants/colors.dart';
 import 'package:the_rick_and_morty/view/widgets/character_status.dart';
 
-class CustomListTile extends StatelessWidget {
+class CharacterListTile extends StatelessWidget {
   final Results results;
-  const CustomListTile({super.key, required this.results});
+  const CharacterListTile({super.key, required this.results});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class CustomListTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
       child: Container(
         height: MediaQuery.of(context).size.height / 7,
-        color: const Color.fromRGBO(86, 86, 86, 0.8),
+        color: TColors.secondary,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:the_rick_and_morty/bloc/episode_bloc/episode_bloc.dart';
+import 'package:the_rick_and_morty/data/models/episode.dart';
+import 'package:the_rick_and_morty/utils/constants/colors.dart';
+import 'package:the_rick_and_morty/view/pages/episode/episode_detail_page.dart';
+import 'package:the_rick_and_morty/view/widgets/episode_list_tile.dart';
 
-import 'package:the_rick_and_morty/bloc/character_bloc/character_bloc.dart';
-import 'package:the_rick_and_morty/data/models/character.dart';
-import 'package:the_rick_and_morty/view/pages/character/character_detail_page.dart';
-import 'package:the_rick_and_morty/view/widgets/custom_list_tile.dart';
-
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class EpisodeSearch extends StatefulWidget {
+  const EpisodeSearch({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<EpisodeSearch> createState() => _EpisodeSearchState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-  late Character _currentCharacter;
+class _EpisodeSearchState extends State<EpisodeSearch> {
+  late Episode _currentEpisode;
   List<Results> _currentResults = [];
   int _currentPage = 1;
   String _currentSearchStr = '';
@@ -28,8 +27,8 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     if (_currentResults.isEmpty) {
       context
-          .read<CharacterBloc>()
-          .add(const CharacterEvent.fetch(name: '', page: 1));
+          .read<EpisodeBloc>()
+          .add(const EpisodeEvent.fetch(name: '', page: 1));
     }
 
     super.initState();
@@ -37,17 +36,9 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<CharacterBloc>().state;
+    final state = context.watch<EpisodeBloc>().state;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black45,
-        centerTitle: true,
-        title: Text(
-          'The Rick and Morty',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-      ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
@@ -55,19 +46,18 @@ class _SearchPageState extends State<SearchPage> {
             padding:
                 const EdgeInsets.only(top: 15, bottom: 15, right: 16, left: 16),
             child: TextField(
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyLarge,
               cursorColor: Colors.white,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color.fromRGBO(86, 86, 86, 0.8),
+                fillColor: TColors.lightContainer,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide.none,
                 ),
-                prefixIcon: const Icon(Icons.search, color: Colors.white),
-                hintText: 'Search character',
-                hintStyle:
-                    const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                prefixIcon: const Icon(Icons.search, color: TColors.black),
+                hintText: 'Search episode',
+                hintStyle: const TextStyle(color: TColors.black),
               ),
 
               // Method for TextField
@@ -77,8 +67,8 @@ class _SearchPageState extends State<SearchPage> {
                 _currentSearchStr = value;
 
                 context
-                    .read<CharacterBloc>()
-                    .add(CharacterEvent.fetch(name: value, page: _currentPage));
+                    .read<EpisodeBloc>()
+                    .add(EpisodeEvent.fetch(name: value, page: _currentPage));
               },
             ),
           ),
@@ -100,24 +90,24 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   );
                 } else {
-                  return _customListView(_currentResults);
+                  return _episodeListView(_currentResults);
                 }
               },
 
               // Loaded state
-              loaded: (characterLoaded) {
-                _currentCharacter = characterLoaded;
+              loaded: (episodeLoaded) {
+                _currentEpisode = episodeLoaded;
                 if (_isPagination) {
                   _currentResults = List.from(_currentResults)
-                    ..addAll(_currentCharacter.results);
+                    ..addAll(_currentEpisode.results);
                   refreshController.loadComplete();
                   _isPagination = false;
                 } else {
-                  _currentResults = List.from(_currentCharacter.results);
+                  _currentResults = List.from(_currentEpisode.results);
                 }
 
                 return _currentResults.isNotEmpty
-                    ? _customListView(_currentResults)
+                    ? _episodeListView(_currentResults)
                     : const SizedBox();
               },
 
@@ -130,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _customListView(List<Results> currentResults) {
+  Widget _episodeListView(List<Results> currentResults) {
     return SmartRefresher(
       controller: refreshController,
       enablePullUp: true,
@@ -138,9 +128,9 @@ class _SearchPageState extends State<SearchPage> {
       onLoading: () {
         _isPagination = true;
         _currentPage++;
-        if (_currentPage <= _currentCharacter.info.pages) {
-          context.read<CharacterBloc>().add(
-                CharacterEvent.fetch(
+        if (_currentPage <= _currentEpisode.info.pages) {
+          context.read<EpisodeBloc>().add(
+                EpisodeEvent.fetch(
                   name: _currentSearchStr,
                   page: _currentPage,
                 ),
@@ -156,13 +146,13 @@ class _SearchPageState extends State<SearchPage> {
         itemBuilder: (context, index) {
           final results = currentResults[index];
 
-          // Character Card with GestureDetector
+          // Episode Card with GestureDetector
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CharacterDetail(results: results),
+                  builder: (context) => EpisodeDetail(results: results),
                 ),
               );
             },
@@ -173,7 +163,7 @@ class _SearchPageState extends State<SearchPage> {
                 right: 15,
                 left: 15,
               ),
-              child: CustomListTile(results: results),
+              child: EpisodeListTile(results: results),
             ),
           );
         },

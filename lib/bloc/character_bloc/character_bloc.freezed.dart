@@ -18,19 +18,20 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$CharacterEvent {
   String get name => throw _privateConstructorUsedError;
   int get page => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, int page) fetch,
+    required TResult Function(String name, int page, String status) fetch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name, int page)? fetch,
+    TResult? Function(String name, int page, String status)? fetch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, int page)? fetch,
+    TResult Function(String name, int page, String status)? fetch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -62,7 +63,7 @@ abstract class $CharacterEventCopyWith<$Res> {
           CharacterEvent value, $Res Function(CharacterEvent) then) =
       _$CharacterEventCopyWithImpl<$Res, CharacterEvent>;
   @useResult
-  $Res call({String name, int page});
+  $Res call({String name, int page, String status});
 }
 
 /// @nodoc
@@ -80,6 +81,7 @@ class _$CharacterEventCopyWithImpl<$Res, $Val extends CharacterEvent>
   $Res call({
     Object? name = null,
     Object? page = null,
+    Object? status = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -90,6 +92,10 @@ class _$CharacterEventCopyWithImpl<$Res, $Val extends CharacterEvent>
           ? _value.page
           : page // ignore: cast_nullable_to_non_nullable
               as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -102,7 +108,7 @@ abstract class _$$CharacterEventFetchImplCopyWith<$Res>
       __$$CharacterEventFetchImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int page});
+  $Res call({String name, int page, String status});
 }
 
 /// @nodoc
@@ -118,6 +124,7 @@ class __$$CharacterEventFetchImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? page = null,
+    Object? status = null,
   }) {
     return _then(_$CharacterEventFetchImpl(
       name: null == name
@@ -128,6 +135,10 @@ class __$$CharacterEventFetchImplCopyWithImpl<$Res>
           ? _value.page
           : page // ignore: cast_nullable_to_non_nullable
               as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -137,16 +148,19 @@ class __$$CharacterEventFetchImplCopyWithImpl<$Res>
 class _$CharacterEventFetchImpl
     with DiagnosticableTreeMixin
     implements CharacterEventFetch {
-  const _$CharacterEventFetchImpl({required this.name, required this.page});
+  const _$CharacterEventFetchImpl(
+      {required this.name, required this.page, required this.status});
 
   @override
   final String name;
   @override
   final int page;
+  @override
+  final String status;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CharacterEvent.fetch(name: $name, page: $page)';
+    return 'CharacterEvent.fetch(name: $name, page: $page, status: $status)';
   }
 
   @override
@@ -155,7 +169,8 @@ class _$CharacterEventFetchImpl
     properties
       ..add(DiagnosticsProperty('type', 'CharacterEvent.fetch'))
       ..add(DiagnosticsProperty('name', name))
-      ..add(DiagnosticsProperty('page', page));
+      ..add(DiagnosticsProperty('page', page))
+      ..add(DiagnosticsProperty('status', status));
   }
 
   @override
@@ -164,11 +179,12 @@ class _$CharacterEventFetchImpl
         (other.runtimeType == runtimeType &&
             other is _$CharacterEventFetchImpl &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.page, page) || other.page == page));
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, page);
+  int get hashCode => Object.hash(runtimeType, name, page, status);
 
   @JsonKey(ignore: true)
   @override
@@ -180,27 +196,27 @@ class _$CharacterEventFetchImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, int page) fetch,
+    required TResult Function(String name, int page, String status) fetch,
   }) {
-    return fetch(name, page);
+    return fetch(name, page, status);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String name, int page)? fetch,
+    TResult? Function(String name, int page, String status)? fetch,
   }) {
-    return fetch?.call(name, page);
+    return fetch?.call(name, page, status);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, int page)? fetch,
+    TResult Function(String name, int page, String status)? fetch,
     required TResult orElse(),
   }) {
     if (fetch != null) {
-      return fetch(name, page);
+      return fetch(name, page, status);
     }
     return orElse();
   }
@@ -237,12 +253,15 @@ class _$CharacterEventFetchImpl
 abstract class CharacterEventFetch implements CharacterEvent {
   const factory CharacterEventFetch(
       {required final String name,
-      required final int page}) = _$CharacterEventFetchImpl;
+      required final int page,
+      required final String status}) = _$CharacterEventFetchImpl;
 
   @override
   String get name;
   @override
   int get page;
+  @override
+  String get status;
   @override
   @JsonKey(ignore: true)
   _$$CharacterEventFetchImplCopyWith<_$CharacterEventFetchImpl> get copyWith =>

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:the_rick_and_morty/view/pages/character/character_page.dart';
 import 'package:the_rick_and_morty/view/pages/episode/episode_page.dart';
-import 'package:the_rick_and_morty/view/pages/character/search_page.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});
@@ -35,5 +35,5 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [const SearchPage(), const EpisodePage()];
+  final screens = [const CharacterPage(), const EpisodePage()];
 }

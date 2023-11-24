@@ -6,10 +6,12 @@ import 'package:http/http.dart' as http;
 class CharacterRepo {
   final url = 'https://rickandmortyapi.com/api/character';
 
-  Future<Character> getCharacter(int page, String name) async {
+  Future<Character> getCharacter(int page, String name, String status) async {
     try {
-      var response = await http.get(Uri.parse('$url?page=$page&name=$name'));
-
+      var uri = Uri.parse(url);
+      var response = await http.get(uri.replace(
+        queryParameters: {'page': '$page', 'name': name, 'status': status},
+      ));
       var jsonResult = json.decode(response.body);
       return Character.fromJson(jsonResult);
     } catch (err) {

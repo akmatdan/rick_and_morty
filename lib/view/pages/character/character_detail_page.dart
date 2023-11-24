@@ -35,6 +35,13 @@ class CharacterDetail extends StatelessWidget {
                             ? Colors.red
                             : Colors.grey,
                   ),
+                  child: CharacterStatus(
+                    liveState: results.status == 'Alive'
+                        ? LiveState.alive
+                        : results.status == 'Dead'
+                            ? LiveState.dead
+                            : LiveState.unknown,
+                  ),
                 ),
 
                 // Image

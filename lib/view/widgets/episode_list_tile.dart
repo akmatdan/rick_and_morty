@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_rick_and_morty/data/models/episode.dart';
+import 'package:the_rick_and_morty/utils/constants/colors.dart';
 
 class EpisodeListTile extends StatelessWidget {
   final Results results;
@@ -11,7 +12,7 @@ class EpisodeListTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
       child: Container(
         height: MediaQuery.of(context).size.height / 7,
-        color: const Color.fromRGBO(86, 86, 86, 0.8),
+        color: TColors.secondary,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
