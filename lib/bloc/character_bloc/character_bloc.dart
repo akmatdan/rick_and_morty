@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:the_rick_and_morty/data/models/character.dart';
 import 'package:the_rick_and_morty/data/repositories/character_repo.dart';
