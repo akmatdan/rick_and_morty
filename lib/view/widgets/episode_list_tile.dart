@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_rick_and_morty/data/models/episode.dart';
 import 'package:the_rick_and_morty/utils/constants/colors.dart';
+import 'package:the_rick_and_morty/utils/constants/sizes.dart';
 
 class EpisodeListTile extends StatelessWidget {
   final Results results;
@@ -75,6 +76,13 @@ class EpisodeListTile extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: EdgeInsets.only(left: 100),
+              child: const Icon(
+                Icons.arrow_right,
+                size: TSizes.iconLg,
+              ),
+            )
           ],
         ),
       ),

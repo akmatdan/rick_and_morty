@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 import 'package:the_rick_and_morty/data/models/character.dart';
 import 'package:the_rick_and_morty/utils/constants/colors.dart';
+import 'package:the_rick_and_morty/utils/constants/sizes.dart';
 import 'package:the_rick_and_morty/view/widgets/character_status.dart';
 
 class CharacterListTile extends StatelessWidget {
@@ -117,7 +119,11 @@ class SpeciesAndGender extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                 )
               ],
-            )
+            ),
+            const Icon(
+              Icons.arrow_right,
+              size: TSizes.iconLg,
+            ),
           ]),
     );
   }
